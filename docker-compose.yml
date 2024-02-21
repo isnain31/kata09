@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+
+  kata09:
+    build:
+      context: ./php
+    container_name: kata09
+    restart: unless-stopped
+    volumes:
+      - ./kata09:/var/www/html
+    networks:
+      - app-network
+
+
+networks:
+  app-network:
+    driver: bridge
