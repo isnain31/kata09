@@ -3,18 +3,23 @@ require __DIR__ . '/vendor/autoload.php';
 
 use App\Application\CheckOut;
 use App\Domain\ProductFactory;
+use App\Infrastructure\MarketPricingRules;
 use App\Infrastructure\MultiplePricing\MultiPricePriceScheme;
-use App\Infrastructure\MultiplePricing\MultiPricePricingCalculationRules;
+use App\Infrastructure\MultiplePricing\MultiPricePriceSchemeCalculator;
+
+$marketRules=new MarketPricingRules();
 
 
-$pricingRules = new MultiPricePricingCalculationRules();
+$marketRules->addRuleByProduct(ProductFactory::create('A', 50, [new MultiPricePriceScheme(3, 130,1)]));
+$marketRules->addRuleByProduct(ProductFactory::create('B', 30, [new MultiPricePriceScheme(2, 45,1)]));
+$marketRules->addRuleByProduct(ProductFactory::create('C', 20));
+$marketRules->addRuleByProduct(ProductFactory::create('D', 15));
 
-$pricingRules->add(ProductFactory::create('A', 50, [new MultiPricePriceScheme(3, 130,1)]));
-$pricingRules->add(ProductFactory::create('B', 30, [new MultiPricePriceScheme(2, 45,1)]));
-$pricingRules->add(ProductFactory::create('C', 20));
-$pricingRules->add(ProductFactory::create('D', 15));
 
-$checkOut = new CheckOut($pricingRules);
+$priceCalculator = new MultiPricePriceSchemeCalculator();
+
+
+$checkOut = new CheckOut($priceCalculator,$marketRules);
 
 $checkOut->scan('C');
 $checkOut->scan('D');

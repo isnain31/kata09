@@ -9,6 +9,7 @@ use Codeception\Test\Unit;
 
 class ProductFactoryTest extends Unit
 {
+
     public function testCreate()
     {
         $productAPricingScheme=new MultiPricePriceScheme(3, 130,1);

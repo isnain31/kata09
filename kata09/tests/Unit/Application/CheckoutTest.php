@@ -3,26 +3,29 @@ namespace App\Tests\Unit\Application;
 
 use App\Application\CheckOut;
 use App\Domain\ProductFactory;
+use App\Infrastructure\MarketPricingRules;
 use App\Infrastructure\MultiplePricing\MultiPricePriceScheme;
-use App\Infrastructure\MultiplePricing\MultiPricePricingCalculationRules;
-use Tests\Support\UnitTester;
+use App\Infrastructure\MultiplePricing\MultiPricePriceSchemeCalculator;
 use Codeception\Test\Unit;
+use Tests\Support\UnitTester;
 
 class CheckoutTest extends Unit
 {
     private CheckOut $checkout;
-    private MultiPricePricingCalculationRules $pricingRules;
+    private MultiPricePriceSchemeCalculator $pricingRules;
+
+    private MarketPricingRules $marketPricingRules;
 
     protected function _before()
     {
 
-        $this->pricingRules = new MultiPricePricingCalculationRules();
-        $this->pricingRules ->add(ProductFactory::create('A', 50, [new MultiPricePriceScheme(3, 130,1)]));
-        $this->pricingRules ->add(ProductFactory::create('B', 30, [new MultiPricePriceScheme(2, 45,1)]));
-        $this->pricingRules ->add(ProductFactory::create('C', 20));
-        $this->pricingRules ->add(ProductFactory::create('D', 15));
+        $this->marketPricingRules = new MarketPricingRules();
+        $this->marketPricingRules->addRuleByProduct(ProductFactory::create('A', 50, [new MultiPricePriceScheme(3, 130,1)]));
+        $this->marketPricingRules->addRuleByProduct(ProductFactory::create('B', 30, [new MultiPricePriceScheme(2, 45,1)]));
+        $this->marketPricingRules->addRuleByProduct(ProductFactory::create('C', 20));
+        $this->marketPricingRules->addRuleByProduct(ProductFactory::create('D', 15));
 
-
+        $this->pricingRules = new MultiPricePriceSchemeCalculator();
     }
 
     // tests
@@ -62,7 +65,7 @@ class CheckoutTest extends Unit
 
     public function testTotalIncremental()
     {
-        $this->checkout = new CheckOut( $this->pricingRules);
+        $this->checkout = new CheckOut( $this->pricingRules, $this->marketPricingRules);
         $this->assertEquals(0, $this->checkout->total());
         $this->checkout->scan('A');$this->assertEquals(50, $this->checkout->total());
         $this->checkout->scan('B');$this->assertEquals(80, $this->checkout->total());
@@ -73,7 +76,7 @@ class CheckoutTest extends Unit
 
     private function Price(string $goods): void
     {
-        $this->checkout = new CheckOut($this->pricingRules);
+        $this->checkout = new CheckOut($this->pricingRules, $this->marketPricingRules);
 
         foreach(str_split($goods)  as $item ) {
             $this->checkout->scan($item);
