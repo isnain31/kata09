@@ -6,11 +6,14 @@ class Product implements ProductInterface
 {
 
 
-    private SpecialPricingSchemeInterface $specialPrice;
+    /*
+     * @var SpecialPricingSchemeInterface[]
+     */
+    private array $specialPrice;
 
     public function __construct(private string $sku, private float $price)
     {
-        $this->specialPrice = new NullSpecialPrice();
+        $this->specialPrice = [];
     }
 
     public function getSku(): string
@@ -23,12 +26,18 @@ class Product implements ProductInterface
         return $this->price;
     }
 
-    public function setSpecialPrice(SpecialPricingSchemeInterface $specialPrice): void
+    public function addSpecialPrice(SpecialPricingScheme $specialPrice): void
     {
-            $this->specialPrice = $specialPrice;
+            $this->specialPrice[] = $specialPrice;
+            usort($this->specialPrice, function($a, $b){
+                return $a->getPriority() < $b->getPriority();
+            });
     }
 
-    public function getSpecialPrice(): SpecialPricingSchemeInterface
+    /**
+     * @return SpecialPricingScheme[]
+     */
+    public function getSpecialPrice(): array
     {
         return $this->specialPrice;
     }

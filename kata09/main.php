@@ -8,17 +8,18 @@ use App\Infrastructure\MultiplePricing\MultiPricePricingCalculationRules;
 
 
 $pricingRules = new MultiPricePricingCalculationRules();
-$pricingRules->add(ProductFactory::create('A', 50, new MultiPricePriceScheme(3, 130)));
-$pricingRules->add(ProductFactory::create('B', 30, new MultiPricePriceScheme(2, 45)));
+
+$pricingRules->add(ProductFactory::create('A', 50, [new MultiPricePriceScheme(3, 130,1)]));
+$pricingRules->add(ProductFactory::create('B', 30, [new MultiPricePriceScheme(2, 45,1)]));
 $pricingRules->add(ProductFactory::create('C', 20));
 $pricingRules->add(ProductFactory::create('D', 15));
 
-$pricingRules = new CheckOut($pricingRules);
+$checkOut = new CheckOut($pricingRules);
 
-$pricingRules->scan('C');
-$pricingRules->scan('D');
-$pricingRules->scan('B');
-$pricingRules->scan('A');
+$checkOut->scan('C');
+$checkOut->scan('D');
+$checkOut->scan('B');
+$checkOut->scan('A');
 
 echo "for the scanning sequce CDBA the total price is: \n";
-echo $pricingRules->total()."\n";
+echo $checkOut->total()."\n";

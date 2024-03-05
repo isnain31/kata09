@@ -2,15 +2,16 @@
 
 namespace App\Infrastructure\MultiplePricing;
 
-use App\Domain\SpecialPricingSchemeInterface;
+use App\Domain\SpecialPricingScheme;
 
-class MultiPricePriceScheme implements SpecialPricingSchemeInterface
+class MultiPricePriceScheme extends SpecialPricingScheme
 {
-    const   SPECIAL_PRICE_TYPE = 'multi_price';
-    public function __construct( private int $quantity, private float $price)
-    {
 
+    public function __construct( private int $quantity, private float $price, int $priority)
+    {
+        $this->setPriority($priority);
     }
+
 
     public function getQuantity(): int
     {
@@ -22,4 +23,13 @@ class MultiPricePriceScheme implements SpecialPricingSchemeInterface
         return $this->price;
     }
 
+    public function setPriority(int $priority): void
+    {
+       $this->priority= $priority;
+    }
+
+    public function getPriority(): int
+    {
+        return $this->priority;
+    }
 }

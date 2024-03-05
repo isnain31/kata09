@@ -4,5 +4,5 @@ namespace App\Domain;
 
 interface ProductInterface
 {
-    function setSpecialPrice(SpecialPricingSchemeInterface $specialPrice);
+    function addSpecialPrice(SpecialPricingScheme $specialPrice);
 }

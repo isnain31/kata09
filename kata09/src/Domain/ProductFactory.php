@@ -7,14 +7,16 @@ class ProductFactory
     /**
      * @param string $item
      * @param float $price
-     * @param SpecialPricingSchemeInterface $pricingSchemes
+     * @param SpecialPricingScheme[] $pricingSchemes
      * @return Product
      */
-    public static function create(string $item, float $price, SpecialPricingSchemeInterface $pricingScheme=null): Product
+    public static function create(string $item, float $price, array $pricingSchemes=[]): Product
     {
          $product=new Product($item, $price);
-         if($pricingScheme)
-            $product->setSpecialPrice($pricingScheme);
+
+         foreach($pricingSchemes as $pricingScheme)
+             $product->addSpecialPrice($pricingScheme);
+
 
          return $product;
     }

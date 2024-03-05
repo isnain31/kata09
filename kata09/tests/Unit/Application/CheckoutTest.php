@@ -17,8 +17,8 @@ class CheckoutTest extends Unit
     {
 
         $this->pricingRules = new MultiPricePricingCalculationRules();
-        $this->pricingRules ->add(ProductFactory::create('A', 50, new MultiPricePriceScheme(3, 130)));
-        $this->pricingRules ->add(ProductFactory::create('B', 30, new MultiPricePriceScheme(2, 45)));
+        $this->pricingRules ->add(ProductFactory::create('A', 50, [new MultiPricePriceScheme(3, 130,1)]));
+        $this->pricingRules ->add(ProductFactory::create('B', 30, [new MultiPricePriceScheme(2, 45,1)]));
         $this->pricingRules ->add(ProductFactory::create('C', 20));
         $this->pricingRules ->add(ProductFactory::create('D', 15));
 

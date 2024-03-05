@@ -33,11 +33,14 @@ class MultiPricePricingCalculationRules implements PricingRulesInterface
             return 0;
 
         $price = 0;
-        $specialPrice= $this->rules[$sku]->getSpecialPrice();
-        if($specialPrice instanceof MultiPricePriceScheme){
+        $specialPrices= $this->rules[$sku]->getSpecialPrice();
+
+        foreach($specialPrices as $specialPrice){
             $price += $specialPrice->getPrice() * intdiv($quantity, $specialPrice->getQuantity());
             $quantity = $quantity % $specialPrice->getQuantity();
         }
+
+
         return $price + $quantity*$this->getNormalPrice($sku);
     }
 
