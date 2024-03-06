@@ -2,7 +2,8 @@
 
 namespace App\Application;
 
-use App\Infrastructure\MarketPricingRules;
+use App\Domain\ProductCatalogInterface;
+use App\Infrastructure\ProductCatalog;
 
 class CheckOut
 {
@@ -13,7 +14,7 @@ class CheckOut
      */
     private $items = [];
 
-    public function __construct(private PriceSchemeCalculator $pricingRules, private MarketPricingRules $marketRules)
+    public function __construct(private PriceSchemeCalculatorInterface $pricingRules, private ProductCatalogInterface $catalog)
     {
 
     }
@@ -27,6 +28,6 @@ class CheckOut
 
     public function total(): float
     {
-        return $this->pricingRules->getPrice($this->items,$this->marketRules);
+        return $this->pricingRules->getPrice($this->items,$this->catalog);
     }
 }
